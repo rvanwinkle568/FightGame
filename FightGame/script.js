@@ -30,6 +30,7 @@ class Sprite
     }
     this.color = color
     this.isAttacking
+    this.isGrounded = false
   }
   
   draw()
@@ -57,11 +58,13 @@ class Sprite
 
     if (this.position.y + this.height + this.velocity.y >= canvas.height)
     {
-      this.velocity.y = 0  
+      this.velocity.y = 0
+      this.isGrounded = true
     } 
     else
     {
       this.velocity.y += gravity
+      this.isGrounded = false
     }
   }
 
@@ -210,7 +213,11 @@ window.addEventListener("keydown", (event) =>
         player.lastKey = "a"
         break
       case "w":
-        player.velocity.y = -20
+        if (player.isGrounded)
+        {
+          player.velocity.y = -20
+          player.isGrounded = false
+        }
         break
       case " ":
         player.attack()
@@ -228,7 +235,11 @@ window.addEventListener("keydown", (event) =>
           enemy.lastKey = "ArrowLeft"
           break
         case "ArrowUp":
-          enemy.velocity.y = -20
+          if (enemy.isGrounded)
+            {
+              enemy.velocity.y = -20
+              enemy.isGrounded = false
+            }
           break
         case "ArrowDown":
           enemy.attack()
