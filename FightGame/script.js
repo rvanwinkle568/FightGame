@@ -31,6 +31,7 @@ class Sprite
     this.color = color
     this.isAttacking
     this.isGrounded = false
+    this.health = 100
   }
   
   draw()
@@ -155,6 +156,42 @@ function rectCollision({rect1, rect2})
   )
 }
 
+function determineWin({player, enemy, timerId})
+{
+  clearTimeout(timerId)
+  document.querySelector("#txtendGame").style.display = "flex"
+  if (player.health === enemy.health)
+    {
+      document.querySelector("#txtendGame").innerHTML = "Tie"
+    }
+    else if (player.health > enemy.health)
+    {
+      document.querySelector("#txtendGame").innerHTML = "Player 1 wins"
+    }
+    else
+    {
+      document.querySelector("#txtendGame").innerHTML = "Player 2 wins"
+    }
+}
+
+let timer = 60
+let timerId
+function decreaseTime()
+{
+  timerId = setTimeout(decreaseTime, 1000)
+  if (timer > 0)
+  {
+    timer --
+    document.querySelector("#timer").innerHTML = timer
+  }
+
+  if (timer === 0)
+  {
+    determineWin({player, enemy, timerId})
+  }
+}
+decreaseTime()
+
 function animate()
 {
   window.requestAnimationFrame(animate)
@@ -189,14 +226,23 @@ function animate()
   if ( rectCollision({rect1: player, rect2: enemy}) && player.isAttacking)
   {
     player.isAttacking = false
-    console.log("go")
+    enemy.health -= 20
+    document.querySelector("#enemyHealth").style.width = enemy.health + "%"
   }
 
   if ( rectCollision({rect1: enemy, rect2: player}) && enemy.isAttacking)
     {
+      player.health -= 20
       enemy.isAttacking = false
-      console.log("enemy go")
+      document.querySelector("#playerHealth").style.width = player.health + "%"
     }
+
+  // End game based on health
+  if (player.health <= 0 || enemy.health <= 0)
+  {
+    determineWin({player, enemy, timerId})
+  }
+  
 }
 animate()
 
