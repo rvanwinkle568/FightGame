@@ -8,78 +8,35 @@ c.fillRect(0, 0, canvas.width, canvas.height)
 
 const gravity = 0.7
 
-class Sprite
-{
-  constructor({position, velocity, color = "red", offset})
+const background = new Sprite
+(
   {
-    this.position = position
-    this.velocity = velocity
-    this.width = 50
-    this.height = 150
-    this.lastKey
-    this.attackBox =
+    position: 
     {
-      position: 
-      {
-        x: this.position.x,
-        y: this.position.y
-      },
-      offset,
-      height: 50,
-      width: 100
-    }
-    this.color = color
-    this.isAttacking
-    this.isGrounded = false
-    this.health = 100
+      x: 0,
+      y:0
+    },
+
+    imageSrc: "./assets/background.png"
   }
-  
-  draw()
+)
+
+const shop = new Sprite
+(
   {
-    c.fillStyle = this.color
-    c.fillRect(this.position.x, this.position.y, this.width, this.height)
-
-    //Attack box
-    if(this.isAttacking)
+    position: 
     {
-      c.fillStyle = "green"
-      c.fillRect(this.attackBox.position.x, this.attackBox.position.y,               this.attackBox.width, this.attackBox.height)
-    }
+      x: 600,
+      y:128
+    },
+
+    imageSrc: "./assets/shop.png",
+    scale: 2.75,
+    framesMax: 6
   }
+)
 
-  update()
-  {
-    this.draw()
-
-    this.attackBox.position.x = this.position.x + this.attackBox.offset.x
-    this.attackBox.position.y = this.position.y
-    
-    this.position.x += this.velocity.x
-    this.position.y += this.velocity.y
-
-    if (this.position.y + this.height + this.velocity.y >= canvas.height)
-    {
-      this.velocity.y = 0
-      this.isGrounded = true
-    } 
-    else
-    {
-      this.velocity.y += gravity
-      this.isGrounded = false
-    }
-  }
-
-  attack()
-  {
-    this.isAttacking = true
-    setTimeout(() => 
-      {
-      this.isAttacking = false
-      }, 100)
-  }
-}
-
-const player = new Sprite
+const player = new Fighter
 (
   {
     position:{
@@ -95,12 +52,38 @@ const player = new Sprite
     {
       x: 0,
       y: 0
+    },
+    imageSrc: "./assets/samuraiMack/Idle.png",
+    framesMax: 8,
+    scale: 2.5,
+    offset: 
+    {
+      x: 215,
+      y: 157
+    },
+    sprites: 
+    {
+      idle: 
+      {
+        imageSrc: "./assets/samuraiMack/Idle.png",
+        framesMax: 8
+      },
+      run: 
+      {
+        imageSrc: "./assets/samuraiMack/Run.png",
+        framesMax: 8
+      },
+      jump: 
+      {
+        imageSrc: "./assets/samuraiMack/Jump.png",
+        framesMax: 2
+      }
     }
   }
 )
 
 
-const enemy = new Sprite
+const enemy = new Fighter
 (
   {
     position:{
@@ -147,49 +130,6 @@ const keys =
   }
 }
 
-function rectCollision({rect1, rect2})
-{
-  return(
-    rect1.attackBox.position.x + rect1.attackBox.width > rect2.position.x          && rect1.attackBox.position.x <= rect2.position.x + rect2.width && 
-    rect1.attackBox.position.y + rect1.attackBox.height >= rect2.position.y
-    && rect1.attackBox.position.y <= rect2.position.y + rect2.height
-  )
-}
-
-function determineWin({player, enemy, timerId})
-{
-  clearTimeout(timerId)
-  document.querySelector("#txtendGame").style.display = "flex"
-  if (player.health === enemy.health)
-    {
-      document.querySelector("#txtendGame").innerHTML = "Tie"
-    }
-    else if (player.health > enemy.health)
-    {
-      document.querySelector("#txtendGame").innerHTML = "Player 1 wins"
-    }
-    else
-    {
-      document.querySelector("#txtendGame").innerHTML = "Player 2 wins"
-    }
-}
-
-let timer = 60
-let timerId
-function decreaseTime()
-{
-  timerId = setTimeout(decreaseTime, 1000)
-  if (timer > 0)
-  {
-    timer --
-    document.querySelector("#timer").innerHTML = timer
-  }
-
-  if (timer === 0)
-  {
-    determineWin({player, enemy, timerId})
-  }
-}
 decreaseTime()
 
 function animate()
@@ -197,18 +137,31 @@ function animate()
   window.requestAnimationFrame(animate)
   c.fillStyle = "black"
   c.fillRect(0, 0, canvas.width, canvas.height)
+  background.update()
+  shop.update()
   player.update()
-  enemy.update()
+  //enemy.update()
   
   //Player movement
   player.velocity.x = 0
   if (keys.a.pressed && player.lastKey === "a")
   {
     player.velocity.x = -5
+    player.switchSprite("run")
   }
   else if (keys.d.pressed && player.lastKey === "d")
   {
-    player.velocity.x = 5 
+    player.velocity.x = 5
+    player.switchSprite("run")
+  }
+  else
+  {
+    player.switchSprite("idle")
+  }
+
+  if (player.velocity.y < 0)
+  {
+    player.switchSprite("jump")
   }
 
   //Enemy movement
