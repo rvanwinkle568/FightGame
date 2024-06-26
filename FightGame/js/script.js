@@ -77,7 +77,13 @@ const player = new Fighter
       {
         imageSrc: "./assets/samuraiMack/Jump.png",
         framesMax: 2
+      },
+      fall: 
+      {
+        imageSrc: "./assets/samuraiMack/Fall.png",
+        framesMax: 2
       }
+
     }
   }
 )
@@ -141,7 +147,7 @@ function animate()
   shop.update()
   player.update()
   //enemy.update()
-  
+
   //Player movement
   player.velocity.x = 0
   if (keys.a.pressed && player.lastKey === "a")
@@ -162,6 +168,10 @@ function animate()
   if (player.velocity.y < 0)
   {
     player.switchSprite("jump")
+  }
+  else if (player.velocity.y > 0)
+  {
+    player.switchSprite("fall")  
   }
 
   //Enemy movement
@@ -195,7 +205,7 @@ function animate()
   {
     determineWin({player, enemy, timerId})
   }
-  
+
 }
 animate()
 
