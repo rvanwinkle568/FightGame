@@ -87,6 +87,11 @@ const player = new Fighter
       {
         imageSrc: "./assets/samuraiMack/Attack1.png",
         framesMax: 6
+      },
+      takeHit: 
+      {
+        imageSrc: "./assets/samuraiMack/Take Hit - white silhouette.png",
+        framesMax: 4
       }
     },
     attackBox: 
@@ -156,6 +161,11 @@ const enemy = new Fighter
       {
         imageSrc: "./assets/kenji/Attack1.png",
         framesMax: 4
+      },
+      takeHit:
+      {
+        imageSrc: "./assets/kenji/Take hit.png",
+        framesMax: 3
       }
     },
     attackBox: 
@@ -265,8 +275,8 @@ function animate()
   if ( rectCollision({rect1: player, rect2: enemy}) && player.isAttacking &&
      player.currFrame === 4)
   {
+    enemy.takeHit()
     player.isAttacking = false
-    enemy.health -= 20
     document.querySelector("#enemyHealth").style.width = enemy.health + "%"
   }
   //If player misses
@@ -280,7 +290,7 @@ function animate()
   if ( rectCollision({rect1: enemy, rect2: player}) && enemy.isAttacking &&
      enemy.currFrame === 2)
     {
-      player.health -= 20
+      player.takeHit()
       enemy.isAttacking = false
       document.querySelector("#playerHealth").style.width = player.health + "%"
     }
