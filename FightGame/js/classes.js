@@ -102,6 +102,7 @@ class Fighter extends Sprite
     this.elapsedFrame = 0     //amount of frames elapsed
     this.holdFrame = 5       //holds the frame for a certain amount of time
     this.sprites = sprites
+    this.dead = false
 
     for (const sprite in this.sprites)
     {
@@ -116,7 +117,7 @@ class Fighter extends Sprite
   update()
   {
     this.draw()
-    this.animateFrames()
+    if (!this.dead) this.animateFrames()
 
     this.attackBox.position.x = this.position.x + this.attackBox.offset.x
     this.attackBox.position.y = this.position.y + this.attackBox.offset.y
@@ -148,12 +149,26 @@ class Fighter extends Sprite
 
   takeHit()
   {
-    this.switchSprite("takeHit")
     this.health -= 20
+
+    if (this.health <= 0)
+    {
+      this.switchSprite("death")
+    }
+    else
+    {
+      this.switchSprite("takeHit")
+    }
   }
 
   switchSprite(sprite)
   {
+    if (this.image === this.sprites.death.image)
+    {
+      if (this.currFrame === this.sprites.death.framesMax - 1) 
+        this.dead = true 
+      return
+    }
     //override all other animations when attacking
     if (this.image === this.sprites.attack1.image && 
         this.currFrame < this.sprites.attack1.framesMax - 1) return
@@ -208,6 +223,14 @@ class Fighter extends Sprite
         {
           this.image = this.sprites.takeHit.image
           this.framesMax = this.sprites.takeHit.framesMax
+          this.currFrame = 0
+        }
+      break
+      case "death":
+        if (this.image !== this.sprites.death.image)
+        {
+          this.image = this.sprites.death.image
+          this.framesMax = this.sprites.death.framesMax
           this.currFrame = 0
         }
       break
