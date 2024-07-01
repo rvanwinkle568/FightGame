@@ -92,6 +92,11 @@ const player = new Fighter
       {
         imageSrc: "./assets/samuraiMack/Take Hit - white silhouette.png",
         framesMax: 4
+      },
+      death: 
+      {
+        imageSrc: "./assets/samuraiMack/Death.png",
+        framesMax: 6
       }
     },
     attackBox: 
@@ -166,6 +171,11 @@ const enemy = new Fighter
       {
         imageSrc: "./assets/kenji/Take hit.png",
         framesMax: 3
+      },
+      death:
+      {
+        imageSrc: "./assets/kenji/Death.png",
+        framesMax: 7
       }
     },
     attackBox: 
@@ -311,49 +321,55 @@ animate()
 
 window.addEventListener("keydown", (event) =>
   {
-    switch(event.key)
+    if (!player.dead)
     {
-      case "d":
-        keys.d.pressed = true
-        player.lastKey = "d"
+      switch(event.key)
+      {
+        case "d":
+          keys.d.pressed = true
+          player.lastKey = "d"
         break
-      case "a":
-        keys.a.pressed = true
-        player.lastKey = "a"
+        case "a":
+          keys.a.pressed = true
+          player.lastKey = "a"
         break
-      case "w":
-        if (player.isGrounded)
-        {
-          player.velocity.y = -20
-          player.isGrounded = false
-        }
+        case "w":
+          if (player.isGrounded)
+          {
+            player.velocity.y = -20
+            player.isGrounded = false
+          }
         break
-      case " ":
-        player.attack()
+        case " ":
+          player.attack()
         break
+      }
     }
 
-    switch(event.key)
+    if (!enemy.dead)
+    {
+      switch(event.key)
       {
         case "ArrowRight":
           keys.ArrowRight.pressed = true
           enemy.lastKey = "ArrowRight"
-          break
+        break
         case "ArrowLeft":
           keys.ArrowLeft.pressed = true
           enemy.lastKey = "ArrowLeft"
-          break
+        break
         case "ArrowUp":
           if (enemy.isGrounded)
             {
               enemy.velocity.y = -20
               enemy.isGrounded = false
             }
-          break
+        break
         case "ArrowDown":
           enemy.attack()
-          break
+        break
       }
+    }
   }
 )
 
