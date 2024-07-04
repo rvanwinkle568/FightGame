@@ -10,7 +10,6 @@
   <meta name="viewport" content="width=device-width">
   <title>Fight Game</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
-
 </head>
 
 <body>
@@ -25,29 +24,38 @@
     </ul>
   </div>
 
-  <!--Red container div-->
-  <div class="game-container">
-    <!--smaller red container-->
-    <div class="health-bar-container">
+  <!-- Game and Start Button Container -->
+  <div class="game-button-container">
+    <!--Red container div-->
+    <div class="game-container">
+      <!--smaller red container-->
+      <div class="health-bar-container">
 
-      <!--player health-->
-      <div class="health-bar player">
-        <div></div>
-        <div id="playerHealth"></div>
+        <!--player health-->
+        <div class="health-bar player">
+          <div></div>
+          <div id="playerHealth"></div>
+        </div>
+
+        <!--Timer-->
+        <div id="timer"></div>
+
+        <!--Enemy health-->
+        <div class="health-bar enemy">
+          <div></div>
+          <div id="enemyHealth"></div>
+        </div>
       </div>
 
-      <!--Timer-->
-      <div id="timer"></div>
-
-      <!--Enemy health-->
-      <div class="health-bar enemy">
-        <div></div>
-        <div id="enemyHealth"></div>
-      </div>
+      <div id="txtendGame"></div>
+      <canvas></canvas>
     </div>
 
-    <div id="txtendGame">Tie</div>
-    <canvas></canvas>
+    <!-- Start Button -->
+    <button id="startGame" onclick="startAudio()">Start Game</button>
+
+    <!--Music-->
+    <audio id="gameMusic" src="./Audio/FightGameMu1.mp3" loop></audio>
   </div>
 
   <!-- Instructions container for Player 2 -->
@@ -57,7 +65,7 @@
       <li>Move Left: Left Arrow</li>
       <li>Move Right: Right Arrow</li>
       <li>Jump: Up Arrow</li>
-      <li>Attack: Down Arrow</li>
+      <li>Attack: Enter</li>
     </ul>
   </div>
 
