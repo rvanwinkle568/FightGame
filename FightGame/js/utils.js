@@ -27,17 +27,23 @@ function determineWin({player, enemy, timerId})
 
 let timer = 60
 let timerId
-function decreaseTime()
+function decreaseTime() 
 {
-  timerId = setTimeout(decreaseTime, 1000)
-  if (timer > 0)
+  if (!isPaused) 
   {
-    timer --
-    document.querySelector("#timer").innerHTML = timer
-  }
-
-  if (timer === 0)
+    if (timer > 0) 
+    {
+      timer--;
+      document.querySelector("#timer").innerHTML = timer;
+      timerId = setTimeout(decreaseTime, 1000);
+    } 
+    else 
+    {
+      determineWin({ player, enemy, timerId });
+    }
+  } 
+  else 
   {
-    determineWin({player, enemy, timerId})
+    timerId = setTimeout(decreaseTime, 1000); // Keep calling                                 decreaseTime to check the pause state
   }
 }
