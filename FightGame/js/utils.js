@@ -33,17 +33,17 @@ function decreaseTime()
   {
     if (timer > 0) 
     {
-      timer--;
-      document.querySelector("#timer").innerHTML = timer;
-      timerId = setTimeout(decreaseTime, 1000);
+      timer--
+      document.querySelector("#timer").innerHTML = timer
+      timerId = setTimeout(decreaseTime, 1000)
     } 
     else 
     {
-      determineWin({ player, enemy, timerId });
+      determineWin({ player, enemy, timerId })
     }
   } 
   else 
   {
-    timerId = setTimeout(decreaseTime, 1000); // Keep calling                                 decreaseTime to check the pause state
+    timerId = setTimeout(decreaseTime, 1000) // Keep calling                                 decreaseTime to check the pause state
   }
 }
