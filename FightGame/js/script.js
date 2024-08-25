@@ -103,7 +103,8 @@
       },
       width: 160,
       height: 50
-    }
+    },
+    attackSpeedMultiplier: 6
   })
 
   const enemy = new Fighter
@@ -179,7 +180,8 @@
       },
       width: 170,
       height: 50
-    }
+    },
+    attackSpeedMultiplier: 1
   })
 
   const keys = 
@@ -261,7 +263,12 @@
       }
 
       //Detect for collision player
-      if (rectCollision({ rect1: player, rect2: enemy }) &&                 player.isAttacking && player.currFrame === 4) 
+      if (player.isAttacking && enemy.isAttacking) {
+        // If both players are attacking at the same time, cancel both attacks
+        player.isAttacking = false;
+        enemy.isAttacking = false;
+      }
+      else if (rectCollision({ rect1: player, rect2: enemy }) &&                 player.isAttacking && player.currFrame === 4) 
       {
         enemy.takeHit()
         player.isAttacking = false
