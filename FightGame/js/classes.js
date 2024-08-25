@@ -46,16 +46,16 @@
     {
       if (this.framesMax > 1) 
       {
-        this.elapsedFrame++;
+        this.elapsedFrame++
         if (this.elapsedFrame % this.holdFrame === 0) 
         {
           if (this.currFrame < this.framesMax - 1) 
           {
-            this.currFrame++;
+            this.currFrame++
           } 
           else 
           {
-            this.currFrame = 0;
+            this.currFrame = 0
           }
         }
       }
@@ -63,14 +63,15 @@
 
     update() 
     {
-      this.draw();
-      this.animateFrames();
+      this.draw()
+      this.animateFrames()
     }
   }
 
 class Fighter extends Sprite
 {
-  constructor({position, velocity, color = "red", imageSrc, scale = 1,           framesMax = 1, offset = {x: 0, y: 0}, sprites, attackBox = {offset: {x: 0, y: 0}, width: undefined, height: undefined}})
+  constructor({position, velocity, color = "red", imageSrc, scale = 1,           framesMax = 1, offset = {x: 0, y: 0}, sprites, attackBox = {offset: {x: 0, y: 0}, width: undefined, height: undefined}, attackSpeedMultiplier = 1,
+})
   {
     super({
       position,
@@ -103,6 +104,9 @@ class Fighter extends Sprite
     this.holdFrame = 5       //holds the frame for a certain amount of time
     this.sprites = sprites
     this.dead = false
+    this.attackSpeedMultiplier = attackSpeedMultiplier
+
+    
 
     for (const sprite in this.sprites)
     {
@@ -117,14 +121,19 @@ class Fighter extends Sprite
   update()
   {
     this.draw()
-    if (!this.dead) this.animateFrames()
+    
+    if (this.isAttacking) {
+      this.animateAttackFrames()
+    } else {
+      if (!this.dead) this.animateFrames()
+    }
 
     this.attackBox.position.x = this.position.x + this.attackBox.offset.x
     this.attackBox.position.y = this.position.y + this.attackBox.offset.y
 
     //For drawing attack box
     // c.fillRect(this.attackBox.position.x, this.attackBox.position.y,                  this.attackBox.width, this.attackBox.height)
-    
+
     this.position.x += this.velocity.x
     this.position.y += this.velocity.y
 
@@ -138,6 +147,23 @@ class Fighter extends Sprite
     {
       this.velocity.y += gravity
       this.isGrounded = false
+    }
+  }
+
+  animateAttackFrames() {
+    if (this.framesMax > 1) {
+      this.elapsedFrame++
+
+      // Apply attack speed multiplier only to attack animation
+      if (this.elapsedFrame % Math.max(1, this.holdFrame /                                 this.attackSpeedMultiplier) === 0) {
+        
+        if (this.currFrame < this.framesMax - 1) {
+          this.currFrame++
+        } else {
+          this.isAttacking = false  // Reset attack flag after animation completes
+          this.currFrame = 0  // Optionally reset frame to start position
+        }
+      }
     }
   }
 
@@ -175,7 +201,7 @@ class Fighter extends Sprite
 
     //Override all other animations when hit
     if (this.image === this.sprites.takeHit.image && this.currFrame <                   this.sprites.takeHit.framesMax - 1) return
-    
+
     switch(sprite)
     {
       case "idle":
